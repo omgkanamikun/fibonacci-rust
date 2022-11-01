@@ -8,9 +8,9 @@ This project sows how to implement Fibonacci recursion-way sequences generator w
 
 ## Technologies
 Project is created with:
-* Cargo version: 1.58.0 (f01b232bc 2022-01-19)
-* rustc version: 1.58.1
-* rustup version: 1.24.3 (ce5817a94 2021-05-31)
+* Cargo version: 1.64.0 (387270bc7 2022-09-16)
+* rustc version: 1.64.0 (a55dd71d5 2022-09-19)
+* rustup version: 1.25.1 (bb60b1e89 2022-07-12)
 
 ## Setup
 To run this project, install it locally using npm:

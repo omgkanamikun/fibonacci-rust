@@ -1,12 +1,30 @@
+use std::io;
+use std::num::ParseIntError;
+
 fn main() {
-    println!("Will print Fibonacci sequence for first {} numbers", NUMBER);
+    println!("Enter number for Fibonacci sequence length");
 
-    let mut cache: [usize; NUMBER] = [0; NUMBER];
+    let mut number = String::new();
 
-    const NUMBER: usize = 51;
+    io::stdin().read_line(&mut number)
+        .expect("error while reading the line");
 
-    for i in 0..NUMBER {
-        println!("{}", fibonacci_number(i, &mut cache));
+    let res: Result<usize, ParseIntError> = number.trim().parse::<usize>();
+
+    let number = match res {
+        Ok(int) => int,
+        Err(core) => {
+            println!("using fallback value, error: {core}");
+            56
+        }
+    };
+
+    println!("Fibonacci sequence for first {} numbers", number);
+
+    let mut cache = vec![0; number];
+
+    for i in 0..number {
+        println!("fibonacci_number: {}", fibonacci_number(i, &mut cache));
     }
 
     println!("The end")
