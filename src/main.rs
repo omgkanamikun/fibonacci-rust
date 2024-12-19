@@ -12,13 +12,10 @@ fn main() {
 
     let res: Result<usize, ParseIntError> = number.trim().parse::<usize>();
 
-    let number = match res {
-        Ok(int) => int,
-        Err(err_value) => {
-            println!("using fallback value, error: {}", err_value);
-            56
-        }
-    };
+    let number = res.unwrap_or_else(|err_value| {
+        println!("using fallback value, error: {}", err_value);
+        96
+    });
 
     println!("Fibonacci sequence for first {} numbers", number);
 
