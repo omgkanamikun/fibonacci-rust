@@ -1,21 +1,36 @@
-## Fibonacci sequences with memoization implemented in Rust
+## Fibonacci Sequence Generator 🦀 with memoization
+
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
 
 ## General info
-This project sows how to implement Fibonacci recursion-way sequences generator with cached values in mutable array.
 
-## Technologies
-Project is created with:
-* Cargo version: 1.64.0 (387270bc7 2022-09-16)
-* rustc version: 1.64.0 (a55dd71d5 2022-09-19)
-* rustup version: 1.25.1 (bb60b1e89 2022-07-12)
+A simple Rust program that generates Fibonacci sequences with memoization for efficient computation.
 
-## Setup
-To run this project, install it locally using npm:
+## How It Works
+
+The program uses dynamic programming (memoization) to efficiently calculate Fibonacci numbers by caching previously computed values, avoiding redundant calculations.
+
+## Features
+
+- Interactive command-line interface
+- Input validation for sequence length
+- Memoized Fibonacci calculation for better performance
+- Clear output formatting
+
+## Requirements
+
+- Rust 1.70.0 or higher
+
+## Usage
+  Run the program with the following command:
 
 ```
 $ cd ../fibonacci-rust
-$ cargo run fibonacci-rust
+$ cargo run --release fibonacci-rust
 ```
+
+## License
+
+This project is open source and available under the MIT License.

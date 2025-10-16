@@ -1,52 +1,64 @@
 use std::io;
-use std::num::ParseIntError;
 
-fn main() {
-    println!("Enter number for Fibonacci sequence length");
+fn get_sequence_length() -> usize {
+    let mut user_input = String::new();
+    let fib_sequence_length: usize;
 
-    let mut number = String::new();
+    loop {
+        user_input.clear();
 
-    io::stdin()
-        .read_line(&mut number)
-        .expect("error while reading the line");
+        io::stdin()
+            .read_line(&mut user_input)
+            .expect("Failed to read line");
 
-    let res: Result<usize, ParseIntError> = number.trim().parse::<usize>();
-
-    let number = res.unwrap_or_else(|err_value| {
-        println!("using fallback value, error: {}", err_value);
-        96
-    });
-
-    println!("Fibonacci sequence for first {} numbers", number);
-
-    let mut cache = vec![0; number];
-
-    let mut count = 1;
-
-    for i in 0..number {
-        println!(
-            "fibonacci_number {} is '{}'",
-            count,
-            fibonacci_number(i, &mut cache)
-        );
-        count += 1;
+        match user_input.trim().parse::<usize>() {
+            Ok(num) => {
+                fib_sequence_length = num;
+                break;
+            }
+            Err(_) => {
+                println!("Please enter a positive integer!");
+                continue;
+            }
+        };
     }
-
-    println!("The end")
+    fib_sequence_length
 }
 
-fn fibonacci_number(number: usize, arr: &mut [usize]) -> usize {
-    if number <= 1 {
-        return number;
+fn fibonacci_number(position: usize, cache: &mut [usize]) -> usize {
+    if position <= 1 {
+        return position;
     }
 
-    if arr[number] != 0 && !arr.is_empty() {
-        return arr[number];
+    if cache[position] != 0 {
+        return cache[position];
     }
 
-    let i = fibonacci_number(number - 1, arr) + fibonacci_number(number - 2, arr);
+    let value = fibonacci_number(position - 1, cache) + fibonacci_number(position - 2, cache);
+    cache[position] = value;
+    value
+}
 
-    arr[number] = i;
+fn main() {
+    println!("Hello, 🦀!\nEnter the length of Fibonacci sequence");
 
-    i
+    let fib_sequence_length = get_sequence_length();
+    if fib_sequence_length == 0 {
+        println!("Sequence length is 0. Exiting.");
+        return;
+    }
+
+    println!(
+        "Generating Fibonacci sequence for first {} numbers",
+        fib_sequence_length
+    );
+
+    let mut cache = vec![0; fib_sequence_length];
+
+    for position in 0..fib_sequence_length {
+        let fib_value = fibonacci_number(position, &mut cache);
+        println!("Fibonacci number #{}: {}", position + 1, fib_value);
+    }
+
+    println!("End of the sequence . 👋");
 }
