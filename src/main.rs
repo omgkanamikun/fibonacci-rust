@@ -36,6 +36,7 @@ fn fibonacci_number(position: usize, cache: &mut [usize]) -> usize {
 
     let value = fibonacci_number(position - 1, cache) + fibonacci_number(position - 2, cache);
     cache[position] = value;
+
     value
 }
 

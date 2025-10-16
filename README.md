@@ -1,8 +1,11 @@
 ## Fibonacci Sequence Generator 🦀 with memoization
 
 * [General info](#general-info)
-* [Technologies](#technologies)
-* [Setup](#setup)
+* [How it works](#how-it-works)
+* [Features](#features)
+* [Requirements](#requirements)
+* [Usage](#usage)
+* [License](#license)
 
 ## General info
 
