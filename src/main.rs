@@ -2,8 +2,6 @@ use std::io;
 
 fn get_sequence_length() -> usize {
     let mut user_input = String::new();
-    let fib_sequence_length: usize;
-
     loop {
         user_input.clear();
 
@@ -11,31 +9,34 @@ fn get_sequence_length() -> usize {
             .read_line(&mut user_input)
             .expect("Failed to read line");
 
-        match user_input.trim().parse::<usize>() {
-            Ok(num) => {
-                fib_sequence_length = num;
-                break;
-            }
+        match parse_usize(&user_input) {
+            Ok(num) => break num,
             Err(_) => {
-                println!("Please enter a positive integer!");
+                eprint!("Please enter a positive integer!");
                 continue;
             }
-        };
+        }
     }
-    fib_sequence_length
 }
 
-fn fibonacci_number(position: usize, cache: &mut [usize]) -> usize {
-    if position <= 1 {
-        return position;
+fn parse_usize(input: &str) -> Result<usize, ()> {
+    input.trim().parse::<usize>().map_err(|_| ())
+}
+
+fn fibonacci_recursive(position: usize, cache: &mut [Option<usize>]) -> usize {
+    if let Some(value) = cache[position] {
+        return value;
     }
 
-    if cache[position] != 0 {
-        return cache[position];
-    }
+    let value = match position {
+        0 => 0,
+        1 => 1,
+        _ => fibonacci_recursive(position - 1, cache)
+            .checked_add(fibonacci_recursive(position - 2, cache))
+            .expect("Fibonacci value exceeds usize"),
+    };
 
-    let value = fibonacci_number(position - 1, cache) + fibonacci_number(position - 2, cache);
-    cache[position] = value;
+    cache[position] = Some(value);
 
     value
 }
@@ -44,6 +45,7 @@ fn main() {
     println!("Hello, 🦀!\nEnter the length of Fibonacci sequence");
 
     let fib_sequence_length = get_sequence_length();
+
     if fib_sequence_length == 0 {
         println!("Sequence length is 0. Exiting.");
         return;
@@ -54,12 +56,61 @@ fn main() {
         fib_sequence_length
     );
 
-    let mut cache = vec![0; fib_sequence_length];
+    let mut cache = vec![None; fib_sequence_length];
 
     for position in 0..fib_sequence_length {
-        let fib_value = fibonacci_number(position, &mut cache);
+        let fib_value = fibonacci_recursive(position, &mut cache);
         println!("Fibonacci number #{}: {}", position + 1, fib_value);
     }
 
     println!("End of the sequence . 👋");
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{fibonacci_recursive, parse_usize};
+
+    #[test]
+    fn accepts_trimmed_positive_integer() {
+        assert_eq!(parse_usize(" 12 \n"), Ok(12));
+    }
+
+    #[test]
+    fn rejects_invalid_input() {
+        assert_eq!(parse_usize("abc"), Err(()));
+    }
+
+    #[test]
+    fn returns_base_cases() {
+        let mut cache = [None; 3];
+
+        assert_eq!(fibonacci_recursive(0, &mut cache), 0);
+        assert_eq!(fibonacci_recursive(1, &mut cache), 1);
+    }
+
+    #[test]
+    fn returns_expected_sequence_value_and_populates_cache() {
+        let mut cache = [None; 8];
+
+        let value = fibonacci_recursive(7, &mut cache);
+
+        assert_eq!(value, 13);
+        assert_eq!(cache[7], Some(13));
+        assert_eq!(cache[6], Some(8));
+    }
+
+    #[test]
+    fn provides_until_usize_limit() {
+        let mut cache = [None; 94];
+
+        assert_eq!(fibonacci_recursive(92, &mut cache), 7540113804746346429);
+        assert_eq!(fibonacci_recursive(93, &mut cache), 12200160415121876738);
+    }
+
+    #[test]
+    #[should_panic(expected = "Fibonacci value exceeds usize")]
+    fn panics_on_overflow() {
+        let mut cache: Vec<Option<usize>> = vec![None; 95];
+        fibonacci_recursive(94, &mut cache);
+    }
 }
