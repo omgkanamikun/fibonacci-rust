@@ -54,7 +54,7 @@ fn main() {
 
     for position in 0..fib_sequence_length {
         let fib_value = fibonacci_recursive(position, &mut cache);
-        println!("Fibonacci number #{}: {}", position + 1, fib_value);
+        println!("Fibonacci number #{}: {fib_value}", position + 1);
     }
 
     println!("End of the sequence . 👋");
