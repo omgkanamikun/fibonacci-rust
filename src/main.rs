@@ -2,6 +2,7 @@ use std::io;
 
 fn get_sequence_length() -> usize {
     let mut user_input = String::new();
+
     loop {
         user_input.clear();
 
@@ -9,18 +10,11 @@ fn get_sequence_length() -> usize {
             .read_line(&mut user_input)
             .expect("Failed to read line");
 
-        match parse_usize(&user_input) {
+        match user_input.trim().parse::<usize>() {
             Ok(num) => break num,
-            Err(_) => {
-                eprint!("Please enter a positive integer!");
-                continue;
-            }
+            Err(_) => eprint!("Please enter a positive integer!"),
         }
     }
-}
-
-fn parse_usize(input: &str) -> Result<usize, ()> {
-    input.trim().parse::<usize>().map_err(|_| ())
 }
 
 fn fibonacci_recursive(position: usize, cache: &mut [Option<usize>]) -> usize {
@@ -68,17 +62,7 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
-    use super::{fibonacci_recursive, parse_usize};
-
-    #[test]
-    fn accepts_trimmed_positive_integer() {
-        assert_eq!(parse_usize(" 12 \n"), Ok(12));
-    }
-
-    #[test]
-    fn rejects_invalid_input() {
-        assert_eq!(parse_usize("abc"), Err(()));
-    }
+    use super::fibonacci_recursive;
 
     #[test]
     fn returns_base_cases() {
